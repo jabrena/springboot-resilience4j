@@ -1,6 +1,6 @@
 # springboot-resilience4j
 
-- qhttps://start.spring.io/
+[![Build Status](https://travis-ci.org/jabrena/springboot-resilience4j.svg?branch=master)](https://travis-ci.org/jabrena/springboot-resilience4j)
 
 ## Documentation
 
@@ -21,3 +21,7 @@
 ## Books
 
 - https://www.manning.com/books/reactive-design-patterns
+
+## Others
+
+- https://start.spring.io/
