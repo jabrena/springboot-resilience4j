@@ -16,19 +16,28 @@
 
 	<properties>
 		<java.version>11</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring-cloud.version>Hoxton.SR4</spring-cloud.version>
         <spring.cloud.contract.verifier.skip>true</spring.cloud.contract.verifier.skip>
-	</properties>
+        <rest-assured.version>4.0.0</rest-assured.version>
+        <wiremock.version>2.26.3</wiremock.version>
+    </properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+        -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
@@ -71,6 +80,19 @@
 			<artifactId>spring-cloud-starter-contract-verifier</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>${wiremock.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${rest-assured.version}</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -94,6 +116,7 @@
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -119,6 +142,11 @@
 					</execution>
 				</executions>
 			</plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.7</version>
+            </plugin>
 			<plugin>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-contract-maven-plugin</artifactId>

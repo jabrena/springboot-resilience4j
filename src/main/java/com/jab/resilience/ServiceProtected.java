@@ -2,6 +2,6 @@ package com.jab.resilience;
 
 public interface ServiceProtected {
 
-    String retrieve();
+    String retrieve(String url);
 
 }

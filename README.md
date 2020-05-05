@@ -2,6 +2,21 @@
 
 [![Build Status](https://travis-ci.org/jabrena/springboot-resilience4j.svg?branch=master)](https://travis-ci.org/jabrena/springboot-resilience4j)
 
+## How to build?
+
+```
+chmod +x mvnw
+./mvnw clean test
+```
+
+Other targets:
+
+```
+mvn clean test jacoco:report
+mvn versions:display-dependency-updates
+mvn versions:display-plugin-updates
+```
+
 ## Documentation
 
 - https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/reactive/function/client/WebClient.html
