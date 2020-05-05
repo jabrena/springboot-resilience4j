@@ -99,6 +99,8 @@ class ServiceProtectedTests {
                 .withBodyFile("greek.json")));
 
         transitionToOpenState("CB1");
+        transitionToClosedState("CB1");
+        transitionToOpenState("CB1");
 
         then(service.retrieve("http://localhost:8090/greek")).isEqualTo("KatakrokerGod");
 
