@@ -27,9 +27,9 @@ public class ServiceProtectedImpl implements ServiceProtected {
     public String retrieve(String url) {
 
          Function<String, List<String>>  circuitBreakerRetrieve = param -> {
-            CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
+             CircuitBreaker circuitBreaker = circuitBreakerFactory.create("CB1");
 
-            return circuitBreaker.run(() -> {
+             return circuitBreaker.run(() -> {
                     var response = restTemplate.exchange(
                         param,
                         HttpMethod.GET,
@@ -43,8 +43,9 @@ public class ServiceProtectedImpl implements ServiceProtected {
         Function<List<String>, String> getFirst = list -> list.stream()
             .peek(LOGGER::info)
             .findFirst()
-            .get();;
+            .get();
 
         return circuitBreakerRetrieve.andThen(getFirst).apply(url);
     }
+
 }

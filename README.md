@@ -31,7 +31,12 @@ mvn versions:display-plugin-updates
 ## Articulos
 
 - https://piotrminkowski.com/2019/12/11/circuit-breaking-in-spring-cloud-gateway-with-resilience4j/
+
+## Examples
+
 - https://github.com/LearningByExample/testing-resilience
+- https://github.com/resilience4j/resilience4j-spring-boot2-demo
+- https://github.com/spring-cloud-samples/spring-cloud-circuitbreaker-demo/tree/master/spring-cloud-circuitbreaker-demo-resilience4j
 
 ## Books
 
@@ -40,3 +45,17 @@ mvn versions:display-plugin-updates
 ## Others
 
 - https://start.spring.io/
+
+## Doubts
+
+- How to implement the logs using Spring Boot objects?
+
+```
+            circuitBreaker..getEventPublisher()
+                 .onSuccess(event -> LOGGER.info(event.toString()))
+                 .onError(event -> LOGGER.info(event.toString()))
+                 .onIgnoredError(event -> LOGGER.info(event.toString()))
+                 .onReset(event -> LOGGER.info(event.toString()))
+                 .onStateTransition(event -> LOGGER.info(event.toString()));
+
+```
