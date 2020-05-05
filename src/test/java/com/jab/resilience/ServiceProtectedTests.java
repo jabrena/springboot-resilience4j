@@ -9,6 +9,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -58,6 +59,7 @@ class ServiceProtectedTests {
         then(service.retrieve("http://localhost:8090/greek")).isNotNull();
     }
 
+    @Disabled
     @Test
     public void given_normalScenario_when_forceOpen_then_Ko() {
 
