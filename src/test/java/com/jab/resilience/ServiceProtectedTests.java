@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
@@ -46,6 +47,7 @@ class ServiceProtectedTests {
     private CircuitBreakerRegistry circuitBreakerRegistry;
 
     @Test
+    @DirtiesContext
     public void given_normalScenario_when_retrieve_then_Ok() {
 
         wireMockServer.stubFor(WireMock.get(WireMock.urlEqualTo("/greek"))
@@ -57,6 +59,7 @@ class ServiceProtectedTests {
     }
 
     @Test
+    @DirtiesContext
     public void given_normalScenario_when_forceOpen_then_Ko() {
 
         createStateMachine();
@@ -71,6 +74,7 @@ class ServiceProtectedTests {
     }
 
     @Test
+    @DirtiesContext
     public void given_normalScenario_when_forceOpenAndWait_then_Ok() {
 
         createStateMachine();
@@ -91,6 +95,7 @@ class ServiceProtectedTests {
     }
 
     @Test
+    @DirtiesContext
     public void given_openState_when_retrieve_then_Ko() {
 
         wireMockServer.stubFor(WireMock.get(WireMock.urlEqualTo("/greek"))
@@ -99,8 +104,6 @@ class ServiceProtectedTests {
                 .withBodyFile("greek.json")));
 
         transitionToOpenState("CB1");
-        transitionToClosedState("CB1");
-        transitionToOpenState("CB1");
 
         then(service.retrieve("http://localhost:8090/greek")).isEqualTo("KatakrokerGod");
 
@@ -108,16 +111,13 @@ class ServiceProtectedTests {
     }
 
     @Test
+    @DirtiesContext
     public void given_closeState_when_retrieve_then_Ok() {
 
         wireMockServer.stubFor(WireMock.get(WireMock.urlEqualTo("/greek"))
             .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
                 .withStatus(200)
                 .withBodyFile("greek.json")));
-
-        //TODO Review Why
-        transitionToOpenState("CB1");
-        transitionToClosedState("CB1");
 
         then(service.retrieve("http://localhost:8090/greek")).isEqualTo("Zeus");
 
