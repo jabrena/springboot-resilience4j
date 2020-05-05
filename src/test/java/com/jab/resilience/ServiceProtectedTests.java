@@ -18,6 +18,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 
 @Slf4j
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ServiceProtectedTests {
 
     //State machine stages
@@ -47,7 +48,6 @@ class ServiceProtectedTests {
     private CircuitBreakerRegistry circuitBreakerRegistry;
 
     @Test
-    @DirtiesContext
     public void given_normalScenario_when_retrieve_then_Ok() {
 
         wireMockServer.stubFor(WireMock.get(WireMock.urlEqualTo("/greek"))
@@ -59,7 +59,6 @@ class ServiceProtectedTests {
     }
 
     @Test
-    @DirtiesContext
     public void given_normalScenario_when_forceOpen_then_Ko() {
 
         createStateMachine();
@@ -74,7 +73,6 @@ class ServiceProtectedTests {
     }
 
     @Test
-    @DirtiesContext
     public void given_normalScenario_when_forceOpenAndWait_then_Ok() {
 
         createStateMachine();
@@ -95,7 +93,6 @@ class ServiceProtectedTests {
     }
 
     @Test
-    @DirtiesContext
     public void given_openState_when_retrieve_then_Ko() {
 
         wireMockServer.stubFor(WireMock.get(WireMock.urlEqualTo("/greek"))
@@ -111,7 +108,6 @@ class ServiceProtectedTests {
     }
 
     @Test
-    @DirtiesContext
     public void given_closeState_when_retrieve_then_Ok() {
 
         wireMockServer.stubFor(WireMock.get(WireMock.urlEqualTo("/greek"))
