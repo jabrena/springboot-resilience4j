@@ -93,6 +93,11 @@ class ServiceProtectedTests {
     @Test
     public void given_openState_when_retrieve_then_Ko() {
 
+        wireMockServer.stubFor(WireMock.get(WireMock.urlEqualTo("/greek"))
+            .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
+                .withStatus(200)
+                .withBodyFile("greek.json")));
+
         transitionToOpenState("CB1");
 
         then(service.retrieve("http://localhost:8090/greek")).isEqualTo("KatakrokerGod");

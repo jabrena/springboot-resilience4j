@@ -33,7 +33,7 @@ public class MainConfiguration {
             .waitDurationInOpenState(Duration.ofMillis(1000))
             .slidingWindowSize(2)
             //.slidingWindow()
-            //.automaticTransitionFromOpenToHalfOpenEnabled()
+            //.automaticTransitionFromOpenToHalfOpenEnabled(true)
             //.permittedNumberOfCallsInHalfOpenState()
             //.slowCallDurationThreshold()
             //.slowCallRateThreshold()
