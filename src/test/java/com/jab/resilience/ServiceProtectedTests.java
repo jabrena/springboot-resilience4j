@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,6 +41,7 @@ class ServiceProtectedTests {
     @AfterEach
     public void teardown () {
         wireMockServer.stop();
+        transitionToClosedState("CB1");
     }
 
     @Autowired
@@ -49,6 +51,7 @@ class ServiceProtectedTests {
     private CircuitBreakerRegistry circuitBreakerRegistry;
 
     @Test
+    @Order(1)
     public void given_normalScenario_when_retrieve_then_Ok() {
 
         wireMockServer.stubFor(WireMock.get(WireMock.urlEqualTo("/greek"))
@@ -75,6 +78,7 @@ class ServiceProtectedTests {
     }
 
     @Test
+    @Order(3)
     public void given_normalScenario_when_forceOpenAndWait_then_Ok() {
 
         createStateMachine();
@@ -110,6 +114,7 @@ class ServiceProtectedTests {
     }
 
     @Test
+    @Order(2)
     public void given_closeState_when_retrieve_then_Ok() {
 
         wireMockServer.stubFor(WireMock.get(WireMock.urlEqualTo("/greek"))
@@ -175,6 +180,8 @@ class ServiceProtectedTests {
 
     private void transitionToClosedState(String circuitBreakerName) {
         CircuitBreaker circuitBreaker = circuitBreakerRegistry.circuitBreaker(circuitBreakerName);
-        circuitBreaker.transitionToClosedState();
+        if(!circuitBreaker.getState().equals(CircuitBreaker.State.CLOSED)) {
+            circuitBreaker.transitionToClosedState();
+        }
     }
 }
