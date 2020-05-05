@@ -51,7 +51,6 @@ class ServiceProtectedTests {
     private CircuitBreakerRegistry circuitBreakerRegistry;
 
     @Test
-    @Order(1)
     public void given_normalScenario_when_retrieve_then_Ok() {
 
         wireMockServer.stubFor(WireMock.get(WireMock.urlEqualTo("/greek"))
@@ -62,7 +61,6 @@ class ServiceProtectedTests {
         then(service.retrieve("http://localhost:8090/greek")).isNotNull();
     }
 
-    @Disabled
     @Test
     public void given_normalScenario_when_forceOpen_then_Ko() {
 
@@ -78,7 +76,6 @@ class ServiceProtectedTests {
     }
 
     @Test
-    @Order(3)
     public void given_normalScenario_when_forceOpenAndWait_then_Ok() {
 
         createStateMachine();
@@ -114,7 +111,6 @@ class ServiceProtectedTests {
     }
 
     @Test
-    @Order(2)
     public void given_closeState_when_retrieve_then_Ok() {
 
         wireMockServer.stubFor(WireMock.get(WireMock.urlEqualTo("/greek"))
