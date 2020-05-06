@@ -19,7 +19,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 
 @Slf4j
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ServiceProtectedTests {
 
     //State machine stages
