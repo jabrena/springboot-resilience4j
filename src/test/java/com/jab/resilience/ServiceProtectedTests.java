@@ -9,7 +9,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,7 +61,7 @@ class ServiceProtectedTests {
         then(service.retrieve("http://localhost:8090/greek")).isEqualTo("Zeus");
     }
 
-        /*
+
     @Test
     public void given_normalScenario_when_forceOpen_then_Ko() {
 
@@ -77,9 +76,6 @@ class ServiceProtectedTests {
         checkHealthStatus("CB1", CircuitBreaker.State.OPEN);
     }
 
-
-
-    @Disabled
     @Test
     public void given_normalScenario_when_forceOpenAndWait_then_Ok() {
 
@@ -102,9 +98,6 @@ class ServiceProtectedTests {
         checkHealthStatus(CircuitBreaker1, CircuitBreaker.State.HALF_OPEN);
     }
 
-         */
-
-        /*
     @Test
     public void given_openState_when_retrieve_then_Ko() {
 
@@ -120,7 +113,6 @@ class ServiceProtectedTests {
         checkHealthStatus("CB1", CircuitBreaker.State.OPEN);
     }
 
-
     @Test
     public void given_closeState_when_retrieve_then_Ok() {
 
@@ -133,8 +125,6 @@ class ServiceProtectedTests {
 
         checkHealthStatus("CB1", CircuitBreaker.State.CLOSED);
     }
-
-     */
 
     @SneakyThrows
     private void sleep(int seconds) {
