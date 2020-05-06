@@ -11,4 +11,9 @@ class MainApplicationTests {
 
 	}
 
+    @Test
+    public void main() {
+        MainApplication.main(new String[] {});
+    }
+
 }
