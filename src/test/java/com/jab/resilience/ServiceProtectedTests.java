@@ -29,7 +29,8 @@ class ServiceProtectedTests {
     private static final String THIRD_STATE = "third";
     private static final String SCENARIO_NAME = "scenario_demo1";
 
-    static int port = 8090;
+    private static final int port = 8090;
+    private static final String address = "http://localhost:8090/greek";
 
     WireMockServer wireMockServer;
 
@@ -62,7 +63,7 @@ class ServiceProtectedTests {
 
         checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.CLOSED);
 
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo("Zeus");
+        then(service.retrieve(address)).isEqualTo("Zeus");
 
         checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.CLOSED);
     }
@@ -74,9 +75,9 @@ class ServiceProtectedTests {
 
         checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.CLOSED);
 
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(EXPECTED_GOD_RESPONSE);
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(EXPECTED_GOD_RESPONSE);
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
+        then(service.retrieve(address)).isEqualTo(EXPECTED_GOD_RESPONSE);
+        then(service.retrieve(address)).isEqualTo(EXPECTED_GOD_RESPONSE);
+        then(service.retrieve(address)).isEqualTo(FALLBACK_GOD_RESPONSE);
 
         checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.OPEN);
     }
@@ -88,16 +89,16 @@ class ServiceProtectedTests {
 
         checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.CLOSED);
 
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(EXPECTED_GOD_RESPONSE);
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(EXPECTED_GOD_RESPONSE);
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
+        then(service.retrieve(address)).isEqualTo(EXPECTED_GOD_RESPONSE);
+        then(service.retrieve(address)).isEqualTo(EXPECTED_GOD_RESPONSE);
+        then(service.retrieve(address)).isEqualTo(FALLBACK_GOD_RESPONSE);
+        then(service.retrieve(address)).isEqualTo(FALLBACK_GOD_RESPONSE);
+        then(service.retrieve(address)).isEqualTo(FALLBACK_GOD_RESPONSE);
 
         //TODO Improve this line
         sleep(1);
 
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo("Zeus");
+        then(service.retrieve(address)).isEqualTo("Zeus");
 
         //TODO Review the configuraiton better
         checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.HALF_OPEN);
@@ -109,7 +110,7 @@ class ServiceProtectedTests {
         transitionToOpenState(CIRCUIT_BREAKER_1);
         checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.OPEN);
 
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
+        then(service.retrieve(address)).isEqualTo(FALLBACK_GOD_RESPONSE);
 
         checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.OPEN);
     }
@@ -125,13 +126,13 @@ class ServiceProtectedTests {
 
         checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.CLOSED);
 
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
+        then(service.retrieve(address)).isEqualTo(FALLBACK_GOD_RESPONSE);
 
         checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.CLOSED);
 
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
+        then(service.retrieve(address)).isEqualTo(FALLBACK_GOD_RESPONSE);
+        then(service.retrieve(address)).isEqualTo(FALLBACK_GOD_RESPONSE);
+        then(service.retrieve(address)).isEqualTo(FALLBACK_GOD_RESPONSE);
 
         checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.OPEN);
     }
