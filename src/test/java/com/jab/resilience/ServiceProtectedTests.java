@@ -59,7 +59,7 @@ class ServiceProtectedTests {
                 .withStatus(200)
                 .withBodyFile("greek.json")));
 
-        then(service.retrieve("http://localhost:8090/greek")).isNotNull();
+        then(service.retrieve("http://localhost:8090/greek")).isEqualTo("Zeus");
     }
 
         /*
