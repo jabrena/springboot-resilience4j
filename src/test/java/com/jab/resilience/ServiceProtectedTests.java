@@ -61,7 +61,7 @@ class ServiceProtectedTests {
 
         then(service.retrieve("http://localhost:8090/greek")).isNotNull();
     }
-     */
+
 
     @Test
     public void given_normalScenario_when_forceOpen_then_Ko() {
@@ -101,6 +101,8 @@ class ServiceProtectedTests {
         //TODO Review the configuraiton better
         checkHealthStatus(CircuitBreaker1, CircuitBreaker.State.HALF_OPEN);
     }
+
+         */
 
         /*
     @Test
