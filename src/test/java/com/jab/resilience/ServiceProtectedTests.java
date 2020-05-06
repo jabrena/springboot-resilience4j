@@ -50,7 +50,7 @@ class ServiceProtectedTests {
     @Autowired
     private CircuitBreakerRegistry circuitBreakerRegistry;
 
-        /*
+
     @Test
     public void given_normalScenario_when_retrieve_then_Ok() {
 
@@ -62,7 +62,7 @@ class ServiceProtectedTests {
         then(service.retrieve("http://localhost:8090/greek")).isNotNull();
     }
 
-
+        /*
     @Test
     public void given_normalScenario_when_forceOpen_then_Ko() {
 
