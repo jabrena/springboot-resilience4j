@@ -9,6 +9,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +20,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 
 @Slf4j
 @SpringBootTest
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ServiceProtectedTests {
 
     //State machine stages
@@ -60,7 +61,7 @@ class ServiceProtectedTests {
 
         then(service.retrieve("http://localhost:8090/greek")).isNotNull();
     }
-
+     */
 
     @Test
     public void given_normalScenario_when_forceOpen_then_Ko() {
@@ -76,8 +77,9 @@ class ServiceProtectedTests {
         checkHealthStatus("CB1", CircuitBreaker.State.OPEN);
     }
 
-     */
 
+
+    @Disabled
     @Test
     public void given_normalScenario_when_forceOpenAndWait_then_Ok() {
 
