@@ -59,3 +59,11 @@ mvn versions:display-plugin-updates
                  .onStateTransition(event -> LOGGER.info(event.toString()));
 
 ```
+
+- Understand all parameters for the CircuitBreakerConfig
+- Understand log messages involved
+
+```
+2020-05-06 11:46:10 [pool-5-thread-2] INFO  o.a.http.impl.execchain.RetryExec - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://localhost:8090: The target server failed to respond
+2020-05-06 11:46:10 [pool-5-thread-2] INFO  o.a.http.impl.execchain.RetryExec - Retrying request to {}->http://localhost:8090
+```

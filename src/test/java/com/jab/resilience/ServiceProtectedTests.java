@@ -14,7 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
-import static com.jab.resilience.Constants.CircuitBreaker1;
+import static com.jab.resilience.Constants.CIRCUIT_BREAKER_1;
+import static com.jab.resilience.Constants.FALLBACK_GOD_RESPONSE;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @Slf4j
@@ -26,6 +27,7 @@ class ServiceProtectedTests {
     private static final String FIRST_STATE = Scenario.STARTED;
     private static final String SECOND_STATE = "second";
     private static final String THIRD_STATE = "third";
+    private static final String SCENARIO_NAME = "scenario_demo1";
 
     static int port = 8090;
 
@@ -40,7 +42,6 @@ class ServiceProtectedTests {
     @AfterEach
     public void teardown () {
         wireMockServer.stop();
-        //transitionToClosedState("CB1");
     }
 
     @Autowired
@@ -49,69 +50,7 @@ class ServiceProtectedTests {
     @Autowired
     private CircuitBreakerRegistry circuitBreakerRegistry;
 
-
-    @Test
-    public void given_normalScenario_when_retrieve_then_Ok() {
-
-        wireMockServer.stubFor(WireMock.get(WireMock.urlEqualTo("/greek"))
-            .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
-                .withStatus(200)
-                .withBodyFile("greek.json")));
-
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo("Zeus");
-    }
-
-
-    @Test
-    public void given_normalScenario_when_forceOpen_then_Ko() {
-
-        createStateMachine();
-
-        checkHealthStatus("CB1", CircuitBreaker.State.CLOSED);
-
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo("Zeus");
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo("Zeus");
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo("KatakrokerGod");
-
-        checkHealthStatus("CB1", CircuitBreaker.State.OPEN);
-    }
-
-    @Test
-    public void given_normalScenario_when_forceOpenAndWait_then_Ok() {
-
-        createStateMachine();
-
-        checkHealthStatus(CircuitBreaker1, CircuitBreaker.State.CLOSED);
-
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo("Zeus");
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo("Zeus");
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo("KatakrokerGod");
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo("KatakrokerGod");
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo("KatakrokerGod");
-
-        //TODO Improve this line
-        sleep(1);
-
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo("Zeus");
-
-        //TODO Review the configuraiton better
-        checkHealthStatus(CircuitBreaker1, CircuitBreaker.State.HALF_OPEN);
-    }
-
-    @Test
-    public void given_openState_when_retrieve_then_Ko() {
-
-        wireMockServer.stubFor(WireMock.get(WireMock.urlEqualTo("/greek"))
-            .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
-                .withStatus(200)
-                .withBodyFile("greek.json")));
-
-        transitionToOpenState("CB1");
-
-        then(service.retrieve("http://localhost:8090/greek")).isEqualTo("KatakrokerGod");
-
-        checkHealthStatus("CB1", CircuitBreaker.State.OPEN);
-    }
+    private final String EXPECTED_GOD_RESPONSE = "Zeus";
 
     @Test
     public void given_closeState_when_retrieve_then_Ok() {
@@ -121,9 +60,80 @@ class ServiceProtectedTests {
                 .withStatus(200)
                 .withBodyFile("greek.json")));
 
+        checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.CLOSED);
+
         then(service.retrieve("http://localhost:8090/greek")).isEqualTo("Zeus");
 
-        checkHealthStatus("CB1", CircuitBreaker.State.CLOSED);
+        checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.CLOSED);
+    }
+
+    @Test
+    public void given_closeState_when_forceOpen_then_Ko() {
+
+        createStateMachine();
+
+        checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.CLOSED);
+
+        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(EXPECTED_GOD_RESPONSE);
+        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(EXPECTED_GOD_RESPONSE);
+        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
+
+        checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.OPEN);
+    }
+
+    @Test
+    public void given_closeState_when_forceOpenAndWait_then_Ok() {
+
+        createStateMachine();
+
+        checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.CLOSED);
+
+        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(EXPECTED_GOD_RESPONSE);
+        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(EXPECTED_GOD_RESPONSE);
+        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
+        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
+        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
+
+        //TODO Improve this line
+        sleep(1);
+
+        then(service.retrieve("http://localhost:8090/greek")).isEqualTo("Zeus");
+
+        //TODO Review the configuraiton better
+        checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.HALF_OPEN);
+    }
+
+    @Test
+    public void given_openState_when_retrieve_then_Ko() {
+
+        transitionToOpenState(CIRCUIT_BREAKER_1);
+        checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.OPEN);
+
+        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
+
+        checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.OPEN);
+    }
+
+    @Test
+    public void given_closeState_and_longDelay_when_retrieve_then_Ko() {
+
+        wireMockServer.stubFor(WireMock.get(WireMock.urlEqualTo("/greek"))
+            .willReturn(WireMock.aResponse().withHeader("Content-Type", "application/json")
+                .withStatus(200)
+                .withFixedDelay(3500)
+                .withBodyFile("greek.json")));
+
+        checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.CLOSED);
+
+        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
+
+        checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.CLOSED);
+
+        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
+        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
+        then(service.retrieve("http://localhost:8090/greek")).isEqualTo(FALLBACK_GOD_RESPONSE);
+
+        checkHealthStatus(CIRCUIT_BREAKER_1, CircuitBreaker.State.OPEN);
     }
 
     @SneakyThrows
@@ -141,7 +151,7 @@ class ServiceProtectedTests {
 
         if(currentState.equals(FIRST_STATE)) {
             wireMockServer.stubFor(WireMock.get(WireMock.urlEqualTo("/greek"))
-                .inScenario("java tips")
+                .inScenario(SCENARIO_NAME)
                 .whenScenarioStateIs(currentState)
                 .willSetStateTo(nextState)
                 .willReturn(WireMock.aResponse()
@@ -150,7 +160,7 @@ class ServiceProtectedTests {
                     .withBodyFile("greek.json")));
         } else if(currentState.equals(SECOND_STATE)) {
             wireMockServer.stubFor(WireMock.get(WireMock.urlEqualTo("/greek"))
-                .inScenario("java tips")
+                .inScenario(SCENARIO_NAME)
                 .whenScenarioStateIs(currentState)
                 .willSetStateTo(nextState)
                 .willReturn(WireMock.aResponse()
@@ -159,7 +169,7 @@ class ServiceProtectedTests {
                     .withBodyFile("greek.json")));
         } else {
             wireMockServer.stubFor(WireMock.get(WireMock.urlEqualTo("/greek"))
-                .inScenario("java tips")
+                .inScenario(SCENARIO_NAME)
                 .whenScenarioStateIs(currentState)
                 .willSetStateTo(nextState)
                 .willReturn(WireMock.aResponse()
@@ -179,8 +189,6 @@ class ServiceProtectedTests {
 
     private void transitionToClosedState(String circuitBreakerName) {
         CircuitBreaker circuitBreaker = circuitBreakerRegistry.circuitBreaker(circuitBreakerName);
-        if(!circuitBreaker.getState().equals(CircuitBreaker.State.CLOSED)) {
-            circuitBreaker.transitionToClosedState();
-        }
+        circuitBreaker.transitionToClosedState();
     }
 }

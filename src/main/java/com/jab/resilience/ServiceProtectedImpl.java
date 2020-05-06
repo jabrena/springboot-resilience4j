@@ -11,7 +11,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.function.Function;
 
-import static com.jab.resilience.Constants.CircuitBreaker1;
+import static com.jab.resilience.Constants.CIRCUIT_BREAKER_1;
+import static com.jab.resilience.Constants.FALLBACK_GOD_RESPONSE;
 
 @Slf4j
 @Service
@@ -29,7 +30,7 @@ public class ServiceProtectedImpl implements ServiceProtected {
     public String retrieve(String url) {
 
          Function<String, List<String>>  circuitBreakerRetrieve = param -> {
-             CircuitBreaker circuitBreaker = circuitBreakerFactory.create(CircuitBreaker1);
+             CircuitBreaker circuitBreaker = circuitBreakerFactory.create(CIRCUIT_BREAKER_1);
 
              return circuitBreaker.run(() -> {
                     var response = restTemplate.exchange(
@@ -39,7 +40,7 @@ public class ServiceProtectedImpl implements ServiceProtected {
                         new ParameterizedTypeReference<List<String>>(){});
                     return response.getBody();
                 },
-                throwable -> List.of("KatakrokerGod"));
+                throwable -> List.of(FALLBACK_GOD_RESPONSE));
         };
 
         Function<List<String>, String> getFirst = list -> list.stream()
