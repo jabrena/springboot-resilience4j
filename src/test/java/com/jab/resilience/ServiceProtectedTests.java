@@ -59,6 +59,7 @@ class ServiceProtectedTests {
         then(service.retrieve("http://localhost:8090/greek")).isNotNull();
     }
 
+    /*
     @Test
     public void given_normalScenario_when_forceOpen_then_Ko() {
 
@@ -72,6 +73,8 @@ class ServiceProtectedTests {
 
         checkHealthStatus("CB1", CircuitBreaker.State.OPEN);
     }
+
+     */
 
     @Test
     public void given_normalScenario_when_forceOpenAndWait_then_Ok() {
@@ -108,6 +111,7 @@ class ServiceProtectedTests {
         checkHealthStatus("CB1", CircuitBreaker.State.OPEN);
     }
 
+    /*
     @Test
     public void given_closeState_when_retrieve_then_Ok() {
 
@@ -120,6 +124,8 @@ class ServiceProtectedTests {
 
         checkHealthStatus("CB1", CircuitBreaker.State.CLOSED);
     }
+
+     */
 
     @SneakyThrows
     private void sleep(int seconds) {
