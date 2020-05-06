@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
+import static com.jab.resilience.Constants.CircuitBreaker1;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @Slf4j
@@ -39,7 +40,7 @@ class ServiceProtectedTests {
     @AfterEach
     public void teardown () {
         wireMockServer.stop();
-        transitionToClosedState("CB1");
+        //transitionToClosedState("CB1");
     }
 
     @Autowired
@@ -82,6 +83,8 @@ class ServiceProtectedTests {
 
         createStateMachine();
 
+        checkHealthStatus(CircuitBreaker1, CircuitBreaker.State.CLOSED);
+
         then(service.retrieve("http://localhost:8090/greek")).isEqualTo("Zeus");
         then(service.retrieve("http://localhost:8090/greek")).isEqualTo("Zeus");
         then(service.retrieve("http://localhost:8090/greek")).isEqualTo("KatakrokerGod");
@@ -94,7 +97,7 @@ class ServiceProtectedTests {
         then(service.retrieve("http://localhost:8090/greek")).isEqualTo("Zeus");
 
         //TODO Review the configuraiton better
-        checkHealthStatus("CB1", CircuitBreaker.State.HALF_OPEN);
+        checkHealthStatus(CircuitBreaker1, CircuitBreaker.State.HALF_OPEN);
     }
 
         /*

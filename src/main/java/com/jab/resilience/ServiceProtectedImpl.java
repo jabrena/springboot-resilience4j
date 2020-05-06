@@ -11,6 +11,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.function.Function;
 
+import static com.jab.resilience.Constants.CircuitBreaker1;
+
 @Slf4j
 @Service
 public class ServiceProtectedImpl implements ServiceProtected {
@@ -27,7 +29,7 @@ public class ServiceProtectedImpl implements ServiceProtected {
     public String retrieve(String url) {
 
          Function<String, List<String>>  circuitBreakerRetrieve = param -> {
-             CircuitBreaker circuitBreaker = circuitBreakerFactory.create("CB1");
+             CircuitBreaker circuitBreaker = circuitBreakerFactory.create(CircuitBreaker1);
 
              return circuitBreaker.run(() -> {
                     var response = restTemplate.exchange(
