@@ -48,6 +48,7 @@ class ServiceProtectedTests {
     @Autowired
     private CircuitBreakerRegistry circuitBreakerRegistry;
 
+        /*
     @Test
     public void given_normalScenario_when_retrieve_then_Ok() {
 
@@ -59,7 +60,7 @@ class ServiceProtectedTests {
         then(service.retrieve("http://localhost:8090/greek")).isNotNull();
     }
 
-    /*
+
     @Test
     public void given_normalScenario_when_forceOpen_then_Ko() {
 
@@ -96,6 +97,7 @@ class ServiceProtectedTests {
         checkHealthStatus("CB1", CircuitBreaker.State.HALF_OPEN);
     }
 
+        /*
     @Test
     public void given_openState_when_retrieve_then_Ko() {
 
@@ -111,7 +113,7 @@ class ServiceProtectedTests {
         checkHealthStatus("CB1", CircuitBreaker.State.OPEN);
     }
 
-    /*
+
     @Test
     public void given_closeState_when_retrieve_then_Ok() {
 
