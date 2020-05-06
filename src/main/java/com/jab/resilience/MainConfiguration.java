@@ -2,6 +2,7 @@ package com.jab.resilience;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
+import io.github.resilience4j.timelimiter.TimeLimiterConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuitBreakerFactory;
@@ -53,6 +54,7 @@ public class MainConfiguration {
 
         return factory -> {
             factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
+                .timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(3)).build())
                 .circuitBreakerConfig(circuitBreakerConfig)
                 .build());
             factory.configureCircuitBreakerRegistry(circuitBreakerRegistry);
