@@ -46,7 +46,7 @@ public class ServiceProtectedImpl implements ServiceProtected {
         Function<List<String>, String> getFirst = list -> list.stream()
             .peek(LOGGER::info)
             .findFirst()
-            .get();
+            .orElse(FALLBACK_GOD_RESPONSE);
 
         return circuitBreakerRetrieve.andThen(getFirst).apply(url);
     }
