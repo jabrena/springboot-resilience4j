@@ -12,7 +12,7 @@
 	<artifactId>springboot-resilience4j</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>springboot-resilience4j</name>
-	<description>A demo to Test Spring Boot & Resilience4j</description>
+	<description>A demo to Test Spring Boot with Resilience4j</description>
 
 	<properties>
 		<java.version>11</java.version>
